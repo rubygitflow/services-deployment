@@ -1,0 +1,17 @@
+[db]
+localhost ansible_connection=local
+
+[rabbitmq]
+localhost ansible_connection=local
+
+[nginx]
+localhost ansible_connection=local
+
+[app]
+localhost ansible_connection=local
+
+[elastic]
+localhost ansible_connection=local
+
+[all:vars]
+ansible_user=itarchitect

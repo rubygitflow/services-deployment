@@ -1,0 +1,67 @@
+---
+- hosts: db
+  become: yes
+  become_user: itarchitect
+  gather_facts: no
+  tasks:
+    - name: ensure packages are installed
+      apt:
+        name:
+          - postgresql-13
+          - libpq-dev
+          - python3-psycopg2
+- hosts: db
+  become: yes
+  become_user: postgres
+  gather_facts: no
+  # https://docs.ansible.com/ansible/latest/user_guide/playbooks_variables.html#defining-variables-in-included-files-and-roles
+  vars_files:
+    - secrets.yml
+  vars:
+    ads_database: ads_microservice_production
+    auth_database: auth_microservice_production
+    ads_user: ads_microservice
+    ads_password: '{{ ads_microservice_password }}'
+    auth_user: auth_microservice
+    auth_password: '{{ auth_microservice_password }}'
+  tasks:
+    - name: ensure ads_database is created
+      postgresql_db:
+        name: '{{ ads_database }}'
+    - name: ensure auth_database is created
+      postgresql_db:
+        name: '{{ auth_database }}'
+    - name: ensure ads_user has access to ads database
+      postgresql_user:
+        db: '{{ ads_database }}'
+        name: '{{ ads_user }}'
+        password: '{{ ads_password }}'
+        priv: ALL
+    - name: ensure auth_user has access to auth database
+      postgresql_user:
+        db: '{{ auth_database }}'
+        name: '{{ auth_user }}'
+        password: '{{ auth_password }}'
+        priv: ALL
+    - name: ensure ads_user has no extra privileges
+      postgresql_user:
+        name: '{{ ads_user }}'
+        role_attr_flags: NOSUPERUSER,NOCREATEDB
+    - name: ensure auth_user has no extra privileges
+      postgresql_user:
+        name: '{{ auth_user }}'
+        role_attr_flags: NOSUPERUSER,NOCREATEDB
+    - name: ensure no other user can access the ads database
+      postgresql_privs:
+        db: '{{ ads_database }}'
+        role: PUBLIC
+        type: database
+        priv: ALL
+        state: absent
+    - name: ensure no other user can access the auth database
+      postgresql_privs:
+        db: '{{ auth_database }}'
+        role: PUBLIC
+        type: database
+        priv: ALL
+        state: absent
