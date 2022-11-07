@@ -3,8 +3,10 @@
   become: yes
   become_user: itarchitect
   gather_facts: no
+  roles:
+    - common
   tasks:
-    - name: ensure packages are installed
+    - name: ensure required packages are installed
       apt:
         name:
           - postgresql-13

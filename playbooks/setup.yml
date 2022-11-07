@@ -21,6 +21,8 @@
       ADS_URL=http://localhost:3001/api/v1
       ADS_PORT=3001
       AUTH_PORT=3000
+  roles:
+    - common
   tasks:
     - name: ensure pip is installed
       apt:

@@ -11,7 +11,7 @@ class AuthMicroservice < Roda
     end
 
     def environment
-      ENV.fetch('RACK_ENV').to_sym
+      ENV.fetch('RACK_ENV')&.to_sym
     end
   end
 
