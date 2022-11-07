@@ -1,0 +1,34 @@
+---
+- hosts: app
+  become: yes
+  gather_facts: no
+  vars_files:
+    - secrets.yml
+  vars:
+    # https://docs.github.com/en/packages/managing-github-packages-using-github-actions-workflows/publishing-and-installing-a-package-with-github-actions
+    env_vars: |
+      DOCKER_USER={{ lookup("env", "DOCKER_USER") }}
+      DOCKER_PASSWORD={{ lookup("env", "DOCKER_PASSWORD") }}
+      ADS_MICROSERVICE_DATABASE_URL=postgres://{{ ads_microservice_user }}:{{ ads_microservice_password }}@127.0.0.1:5432/{{ ads_microservice_database }}
+      AUTH_MICROSERVICE_DATABASE_URL=postgres://{{ auth_microservice_user }}:{{ auth_microservice_password }}@127.0.0.1:5432/{{ auth_microservice_database }}
+      RABBITMQ_HOST=127.0.0.1
+      RABBITMQ_USER=ads
+      RABBITMQ_PASSWORD={{ rabbitmq_password }}
+      RACK_ENV=production
+      LOG_SERVICE=stdout
+      AUTH_URL=http://localhost:3000/api/v1
+      GEOCODER_URL=http://localhost:3002/
+      ADS_URL=http://localhost:3001/api/v1
+      ADS_PORT=3001
+      AUTH_PORT=3000
+  tasks:
+    - name: ensure pip is installed
+      apt:
+        name: python3-pip
+    - name: ensure python dependencies are installed
+      pip:
+        name: docker
+    - name: ensure env file is uploaded
+      copy:
+        content: '{{ env_vars }}'
+        dest: '/home/{{ ansible_user }}/.env'

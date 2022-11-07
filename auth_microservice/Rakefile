@@ -20,6 +20,7 @@ migrate = lambda do |env, version|
     # do nothing
   end
   require 'config'
+  require 'ougai'
   require_relative 'config/initializers/config'
   require_relative 'config/initializers/db'
   Sequel.extension :migration
@@ -87,6 +88,7 @@ seeds = lambda do |env|
   end
   require 'i18n'
   require 'config'
+  require 'ougai'
   require_relative 'config/initializers/config'
   require_relative 'config/initializers/db'
   require_relative 'config/initializers/models'

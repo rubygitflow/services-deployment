@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 old_user_ids = User.where(name: 'admin').map(:id)
-UserSession.where(user_id: old_user_ids).delete
-User.where(name: 'admin').delete
+return unless old_user_ids.size.zero?
 user = User.new
 user.name = 'admin'
 user.email = 'admin@example.com'

@@ -2,4 +2,4 @@ db:
   max_connections: 10
 logger:
   path: log/development.log
-  level: <%= Logger::DEBUG %>
+  level: <%= Ougai::Logger::DEBUG %>

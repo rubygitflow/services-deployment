@@ -18,11 +18,11 @@
   vars_files:
     - secrets.yml
   vars:
-    ads_database: ads_microservice_production
-    auth_database: auth_microservice_production
-    ads_user: ads_microservice
+    ads_database: '{{ ads_microservice_database }}'
+    ads_user: '{{ ads_microservice_user }}'
     ads_password: '{{ ads_microservice_password }}'
-    auth_user: auth_microservice
+    auth_database: '{{ auth_microservice_database }}'
+    auth_user: '{{ auth_microservice_user }}'
     auth_password: '{{ auth_microservice_password }}'
   tasks:
     - name: ensure ads_database is created

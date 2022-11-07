@@ -10,3 +10,7 @@
 
 /log
 !/log/.keep
+
+deploy/*.tar
+deploy/*.tar.gz
+deploy/secrets.yml
