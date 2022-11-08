@@ -9,6 +9,10 @@ class AuthMicroservice < Roda
     def root
       ApplicationLoader.root
     end
+
+    def environment
+      ENV.fetch('RACK_ENV')&.to_sym
+    end
   end
 
   def logger

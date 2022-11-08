@@ -7,7 +7,7 @@ require 'sequel/core'
 
 # Delete AUTH_MICROSERVICE_DATABASE_URL from the environment, so it isn't accidently
 # passed to subprocesses.  AUTH_MICROSERVICE_DATABASE_URL may contain passwords.
-DB = Sequel.connect(ENV.delete('AUTH_MICROSERVICE_DATABASE_URL'), Settings.db&.to_hash&.compact! || {})
+DB = Sequel.connect(ENV['AUTH_MICROSERVICE_DATABASE_URL'] || Settings.db&.to_hash&.compact! || {})
 
 # Load Sequel Database/Global extensions here
 DB.extension :pagination

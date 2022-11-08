@@ -20,7 +20,7 @@ logger = Ougai::Logger.new(
   level: Settings.logger.level
 )
 
-logger.formatter = Ougai::Formatters::Readable.new if stdout?
+logger.formatter = Ougai::Formatters::Readable.new if stdout? && (Application.environment != :production)
 
 logger.before_log = lambda do |data|
   data[:service] = { name: Settings.app.name }

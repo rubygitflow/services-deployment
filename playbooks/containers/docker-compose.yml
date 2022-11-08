@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+  filebeat:
+    image: elastic/filebeat:7.17.7
+    container_name: filebeat
+    # https://www.elastic.co/guide/en/beats/filebeat/8.5/filebeat-starting.html
+    user: root
+    command: --strict.perms=false
+    depends_on:
+      - logstash
+      - elasticsearch
+    volumes:
+      - filebeat:/usr/share/filebeat/data
+      - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      # https://habr.com/ru/company/otus/blog/542144/
+      - /var/lib/docker/containers:/usr/share/dockerlogs/data:ro
+      # https://www.sarulabs.com/post/5/2019-08-12/sending-docker-logs-to-elasticsearch-and-kibana-with-filebeat.html
+      - /var/run/docker.sock:/var/run/docker.sock
+  elasticsearch:
+    image: elasticsearch:7.17.7
+    container_name: elasticsearch
+    volumes:
+      - elasticsearch:/usr/share/elasticsearch/data
+      - ./elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+  logstash:
+    image: logstash:7.17.7
+    container_name: logstash
+    depends_on:
+      - elasticsearch
+    volumes:
+      - logstash:/usr/share/logstash/data
+      - ./logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+  kibana:
+    image: kibana:7.17.7
+    container_name: kibana
+    depends_on:
+      - elasticsearch
+    environment:
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+    ports:
+      - 5601:5601
+volumes:
+  filebeat:
+  elasticsearch:
+  logstash:

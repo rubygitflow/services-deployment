@@ -21,7 +21,7 @@ AuthMicroservice.configure do |app|
     level: Settings.logger.level
   )
 
-  logger.formatter = Ougai::Formatters::Readable.new if stdout?
+  logger.formatter = Ougai::Formatters::Readable.new if stdout? && (AuthMicroservice.environment != :production)
 
   logger.before_log = lambda do |data|
     data[:service] = { name: Settings.app.name }
