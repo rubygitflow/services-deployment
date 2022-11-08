@@ -1,0 +1,14 @@
+---
+- hosts: elastic
+  become: yes
+  gather_facts: no
+  tasks:
+    - name: upload the `docker-compose` configuration
+      # https://docs.ansible.com/ansible/latest/collections/ansible/builtin/copy_module.html
+      ansible.builtin.copy:
+        src: './containers'
+        dest: '~/elastic/'
+    - name: remote launch of `docker-compose`
+      # https://docs.ansible.com/ansible/latest/collections/community/docker/docker_compose_module.html
+      community.docker.docker_compose:
+        project_src: ~/elastic/containers

@@ -16,13 +16,17 @@ rabbitmq_password:
 * Fix `env_vars` in `playbooks/setup.yml`.
 * Run ansible playbooks:
 ```bash
-$ ansible-playbook playbooks/postgresql.yml
-$ ansible-playbook playbooks/rabbitmq.yml
-$ ansible-playbook playbooks/setup.yml
+$ ansible-playbook playbooks/postgresql.yml -e "ansible_become_password=user_password"
+$ ansible-playbook playbooks/rabbitmq.yml -e "ansible_become_password=user_password"
+$ ansible-playbook playbooks/setup.yml -e "ansible_become_password=user_password"
 
-$ ansible-playbook ads_microservice/deploy/deploy.yml
-$ ansible-playbook auth_microservice/deploy/deploy.yml
-$ ansible-playbook geocoder_microservice/deploy/deploy.yml
+$ ansible-playbook ads_microservice/deploy/deploy.yml -e "ansible_become_password=user_password"
+$ ansible-playbook auth_microservice/deploy/deploy.yml -e "ansible_become_password=user_password"
+$ ansible-playbook geocoder_microservice/deploy/deploy.yml -e "ansible_become_password=user_password"
+```
+* After deploying microservices run ansible playbook for elastic stack:
+```bash
+$ ansible-playbook playbooks/elastic.yml -e "ansible_become_password=user_password"
 ```
 
 ## Use services with requests
